@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { motion } from "framer-motion";
 import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { Testimonial } from "@/types";
 import Image from "next/image";
@@ -143,27 +144,27 @@ const Testimonials = () => {
 
 
   return (
-    <section id="testimonials" className="py-20 bg-white relative overflow-hidden">
-      {/* Background Decoration */}
-      <div className="absolute inset-0 opacity-5">
-        <Quote className="absolute top-10 left-10 h-32 w-32 text-primary" />
-        <Quote className="absolute bottom-10 right-10 h-32 w-32 text-secondary rotate-180" />
-      </div>
+    <section id="testimonials" className="py-12 lg:py-16 bg-white relative overflow-hidden">
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header */}
-        <div className="text-center mb-16 animate-slide-up">
+        {/* Header - Compact */}
+        <motion.div
+          className="text-center mb-12 lg:mb-16"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.5 }}
+        >
           <span className="text-sm font-semibold text-primary uppercase tracking-wider">
             CUSTOMER REVIEWS
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-text-primary mt-4 mb-4">
+          <h2 className="text-3xl lg:text-4xl font-bold text-text-primary mt-4 mb-4">
             What Our Customers Say
           </h2>
           <p className="text-text-secondary max-w-2xl mx-auto">
             Join thousands of satisfied customers who found their dream cars with us.
-            Real reviews from real people.
           </p>
-        </div>
+        </motion.div>
 
         {/* Carousel Container */}
         <div
@@ -171,37 +172,44 @@ const Testimonials = () => {
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
-          {/* Navigation Arrows */}
+          {/* Navigation Arrows - Compact */}
           <button
             onClick={handlePrev}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 bg-white rounded-full p-3 shadow-lg hover:bg-primary hover:text-white transition-all duration-300 hidden md:block"
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10 bg-white rounded-full p-2.5 shadow-md hover:bg-primary hover:text-white transition-all duration-300 hidden md:block"
             aria-label="Previous testimonial"
           >
-            <ChevronLeft className="h-6 w-6" />
+            <ChevronLeft className="h-5 w-5" />
           </button>
 
           <button
             onClick={handleNext}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 bg-white rounded-full p-3 shadow-lg hover:bg-primary hover:text-white transition-all duration-300 hidden md:block"
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10 bg-white rounded-full p-2.5 shadow-md hover:bg-primary hover:text-white transition-all duration-300 hidden md:block"
             aria-label="Next testimonial"
           >
-            <ChevronRight className="h-6 w-6" />
+            <ChevronRight className="h-5 w-5" />
           </button>
 
-          {/* Testimonial Cards */}
+          {/* Testimonial Cards - Compact */}
           <div className="overflow-hidden">
-            <div
+            <motion.div
               key={currentIndex}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 animate-fade-in"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
             >
               {visibleTestimonials.map((testimonial, index) => (
-                <div
+                <motion.div
                   key={`${testimonial.id}-${index}`}
-                  className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-2xl transition-all duration-300 hover-lift"
+                  className="bg-white rounded-lg p-5 shadow-md border border-gray-100 hover:shadow-lg transition-all duration-300 hover-lift"
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.45, delay: index * 0.04 }}
                 >
-                    {/* Customer Photo & Info */}
-                    <div className="flex items-center space-x-4 mb-4">
-                      <div className="relative w-16 h-16 rounded-full overflow-hidden ring-2 ring-primary/20">
+                    {/* Customer Photo & Info - Compact */}
+                    <div className="flex items-center space-x-3 mb-3">
+                      <div className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-primary/20">
                         <Image
                           src={testimonial.photo}
                           alt={testimonial.name}
@@ -210,39 +218,39 @@ const Testimonials = () => {
                         />
                       </div>
                       <div>
-                        <h4 className="font-bold text-text-primary">
+                        <h4 className="font-semibold text-text-primary text-sm lg:text-base">
                           {testimonial.name}
                         </h4>
-                        <div className="flex items-center space-x-1 mt-1">
+                        <div className="flex items-center space-x-1 mt-0.5">
                           {[...Array(testimonial.rating)].map((_, i) => (
                             <Star
                               key={i}
-                              className="h-4 w-4 fill-yellow-400 text-yellow-400"
+                              className="h-3 w-3 lg:h-4 lg:w-4 fill-yellow-400 text-yellow-400"
                             />
                           ))}
                         </div>
                       </div>
                     </div>
 
-                    {/* Review Text */}
-                    <p className='text-text-secondary text-sm mb-4 leading-relaxed'>
+                    {/* Review Text - Compact */}
+                    <p className='text-text-secondary text-sm mb-3 leading-relaxed'>
                       &quot;{testimonial.review}&quot;
                     </p>
 
-                    {/* Purchase Info */}
-                    <div className="pt-4 border-t border-gray-100">
+                    {/* Purchase Info - Compact */}
+                    <div className="pt-3 border-t border-gray-100">
                       <p className="text-xs text-text-secondary">
                         <span className="font-semibold text-primary">Bought:</span>{" "}
                         {testimonial.purchase}
                       </p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
-              </div>
+              </motion.div>
           </div>
 
-          {/* Dot Indicators */}
-          <div className="flex justify-center items-center space-x-2 mt-8">
+          {/* Dot Indicators - Compact */}
+          <div className="flex justify-center items-center space-x-2 mt-6">
             {Array.from({
               length: Math.ceil(testimonials.length / cardsToShow),
             }).map((_, index) => (
@@ -251,7 +259,7 @@ const Testimonials = () => {
                 onClick={() => handleDotClick(index * cardsToShow)}
                 className={`transition-all duration-300 rounded-full ${
                   Math.floor(currentIndex / cardsToShow) === index
-                    ? "bg-primary w-8 h-2"
+                    ? "bg-primary w-6 h-2"
                     : "bg-gray-300 w-2 h-2 hover:bg-primary/50"
                 }`}
                 aria-label={`Go to testimonial set ${index + 1}`}

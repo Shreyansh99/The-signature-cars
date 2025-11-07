@@ -1,15 +1,25 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Menu, X, Phone, Car } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Menu,
+  X,
+  Phone,
+  ChevronDown,
+  Car,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import LeadFormModal from "@/components/ui/lead-form-modal";
 
 const Navbar = () => {
+  const [showLeadFormModal, setShowLeadFormModal] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,49 +46,100 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "Home", href: "#home" },
-    { name: "Buy Cars", href: "#cars" },
+    {
+      name: "Buy Cars",
+      href: "#cars",
+      dropdown: [
+        { name: "New Cars", href: "#new-cars" },
+        { name: "Used Cars", href: "#used-cars" },
+        { name: "Luxury Cars", href: "#luxury-cars" },
+      ],
+    },
     { name: "Sell Your Car", href: "#sell" },
-    { name: "Services", href: "#services" },
+    {
+      name: "Services",
+      href: "#services",
+      dropdown: [
+        { name: "Financing", href: "#financing" },
+        { name: "Insurance", href: "#insurance" },
+        { name: "Service", href: "#service" },
+      ],
+    },
     { name: "About Us", href: "#about" },
     { name: "Contact", href: "#contact" },
   ];
 
   return (
-    <nav
+    <motion.nav
+      initial={{ y: 0 }}
+      animate={{ y: isVisible ? 0 : -100 }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        isVisible ? "translate-y-0" : "-translate-y-full",
         isScrolled
-          ? "bg-white/95 backdrop-blur-md shadow-sm"
-          : "bg-white shadow-none"
+          ? "bg-white/95 backdrop-blur-md shadow-md"
+          : "bg-white shadow-sm"
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20 md:h-20">
           {/* Logo */}
-          <a
+          <motion.a
             href="#home"
             className="flex items-center space-x-2 group"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <div className="bg-primary p-2 rounded-lg transition-transform group-hover:scale-105">
-              <Car className="h-5 w-5 text-white" />
+            <div className="bg-primary p-2 rounded-lg">
+              <Car className="h-6 w-6 text-white" />
             </div>
-            <span className="text-xl font-semibold text-text-primary group-hover:text-primary transition-colors">
+            <span className="text-xl md:text-2xl font-bold text-text-primary group-hover:text-primary transition-colors">
               The Signature Cars
             </span>
-          </a>
+          </motion.a>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-1">
             {navLinks.map((link) => (
-              <a
+              <div
                 key={link.name}
-                href={link.href}
-                className="text-sm font-medium text-text-secondary hover:text-primary transition-colors relative group"
+                className="relative"
+                onMouseEnter={() =>
+                  link.dropdown && setActiveDropdown(link.name)
+                }
+                onMouseLeave={() => setActiveDropdown(null)}
               >
-                {link.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
-              </a>
+                <a
+                  href={link.href}
+                  className="px-4 py-2 text-sm font-medium text-text-secondary hover:text-primary transition-colors relative group"
+                >
+                  {link.name}
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
+                </a>
+
+                {/* Dropdown */}
+                <AnimatePresence>
+                  {link.dropdown && activeDropdown === link.name && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-2"
+                    >
+                      {link.dropdown.map((item) => (
+                        <a
+                          key={item.name}
+                          href={item.href}
+                          className="block px-4 py-2 text-sm text-text-secondary hover:bg-accent hover:text-primary transition-colors"
+                        >
+                          {item.name}
+                        </a>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             ))}
           </div>
 
@@ -91,7 +152,10 @@ const Navbar = () => {
               <Phone className="h-4 w-4" />
               <span className="text-sm font-medium">+91 98765 43210</span>
             </a>
-            <Button className="bg-primary hover:bg-primary/90 text-white rounded-lg px-6 hover-lift">
+            <Button 
+              className="rounded-full bg-primary hover:bg-primary/90 text-white px-6"
+              onClick={() => setShowLeadFormModal(true)}
+            >
               Get Quote
             </Button>
           </div>
@@ -99,7 +163,7 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-2 text-text-primary hover-lift"
+            className="lg:hidden p-2 text-text-primary"
             aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? (
@@ -112,35 +176,109 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="lg:hidden bg-white border-t border-gray-100">
-          <div className="px-4 py-4 space-y-1">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className="block px-3 py-2 text-base font-medium text-text-secondary hover:text-primary hover:bg-accent rounded-lg transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {link.name}
-              </a>
-            ))}
-            <div className="pt-4 border-t border-gray-100">
-              <a
-                href="tel:+919876543210"
-                className="flex items-center space-x-2 px-3 py-2 text-base font-medium text-text-secondary hover:text-primary transition-colors"
-              >
-                <Phone className="h-4 w-4" />
-                <span>+91 98765 43210</span>
-              </a>
-              <Button className="w-full mt-2 bg-primary hover:bg-primary/90 text-white rounded-lg">
-                Get Quote
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-    </nav>
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 h-full w-80 bg-white shadow-xl z-50 lg:hidden overflow-y-auto"
+            >
+              <div className="p-6">
+                <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center space-x-2">
+                    <div className="bg-primary p-2 rounded-lg">
+                      <Car className="h-5 w-5 text-white" />
+                    </div>
+                    <span className="text-lg font-bold text-text-primary">
+                      The Signature Cars
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="p-2 text-text-primary"
+                  >
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
+
+                <div className="space-y-2">
+                  {navLinks.map((link) => (
+                    <div key={link.name}>
+                      <a
+                        href={link.href}
+                        onClick={() => {
+                          if (!link.dropdown) {
+                            setIsMobileMenuOpen(false);
+                          } else {
+                            setActiveDropdown(
+                              activeDropdown === link.name ? null : link.name
+                            );
+                          }
+                        }}
+                        className="flex items-center justify-between w-full px-4 py-3 text-text-secondary hover:bg-accent hover:text-primary rounded-lg transition-colors"
+                      >
+                        <span>{link.name}</span>
+                        {link.dropdown && (
+                          <ChevronDown
+                            className={cn(
+                              "h-4 w-4 transition-transform",
+                              activeDropdown === link.name && "rotate-180"
+                            )}
+                          />
+                        )}
+                      </a>
+                      {link.dropdown && activeDropdown === link.name && (
+                        <div className="pl-4 mt-2 space-y-1">
+                          {link.dropdown.map((item) => (
+                            <a
+                              key={item.name}
+                              href={item.href}
+                              onClick={() => setIsMobileMenuOpen(false)}
+                              className="block px-4 py-2 text-sm text-text-secondary hover:bg-accent hover:text-primary rounded-lg transition-colors"
+                            >
+                              {item.name}
+                            </a>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-8 space-y-4">
+                  <a
+                    href="tel:+919876543210"
+                    className="flex items-center space-x-2 text-text-secondary"
+                  >
+                    <Phone className="h-4 w-4" />
+                    <span className="text-sm font-medium">+91 98765 43210</span>
+                  </a>
+                  <Button 
+                    className="w-full rounded-full bg-primary hover:bg-primary/90 text-white"
+                    onClick={() => setShowLeadFormModal(true)}
+                  >
+                    Get Quote
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+      
+        {/* Lead Form Modal */}
+        <LeadFormModal open={showLeadFormModal} onOpenChange={setShowLeadFormModal} />
+    </motion.nav>
   );
 };
 

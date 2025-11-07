@@ -16,61 +16,26 @@ const config: Config = {
   		}
   	},
   	extend: {
-  		colors: {
-  			primary: {
-  				DEFAULT: '#7286D3',
-  				foreground: '#FFFFFF',
-  				50: '#F0F2FA',
-  				100: '#E1E5F5',
-  				200: '#C3CBEB',
-  				300: '#A5B1E1',
-  				400: '#8797D7',
-  				500: '#7286D3',
-  				600: '#5A6BB8',
-  				700: '#48549A',
-  				800: '#36427C',
-  				900: '#24305E'
-  			},
-  			secondary: {
-  				DEFAULT: '#8EA7E9',
-  				foreground: '#FFFFFF',
-  				50: '#F3F6FD',
-  				100: '#E7EDFB',
-  				200: '#CFDBF7',
-  				300: '#B7C9F3',
-  				400: '#9FB7EF',
-  				500: '#8EA7E9',
-  				600: '#7A96E0',
-  				700: '#6685D7',
-  				800: '#5274CE',
-  				900: '#3E63C5'
-  			},
-  			accent: {
-  				DEFAULT: '#E5E0FF',
-  				foreground: '#1A1A2E',
-  				50: '#F9F8FF',
-  				100: '#F3F1FF',
-  				200: '#E5E0FF',
-  				300: '#D7CFFF',
-  				400: '#C9BEFF',
-  				500: '#BBADFF',
-  				600: '#AD9CFF',
-  				700: '#9F8BFF',
-  				800: '#917AFF',
-  				900: '#8369FF'
-  			},
-  			light: {
-  				DEFAULT: '#FFF2F2',
-  				foreground: '#1A1A2E'
-  			},
-  			dark: {
-  				DEFAULT: '#2C3E50',
-  				foreground: '#FFFFFF'
-  			},
-  			text: {
-  				primary: '#1A1A2E',
-  				secondary: '#4A5568'
-  			},
+  			colors: {
+  				// The Signature Cars Color Palette
+  				primary: {
+  					DEFAULT: '#7286D3',
+  					foreground: '#FFFFFF'
+  				},
+  				secondary: {
+  					DEFAULT: '#8EA7E9',
+  					foreground: '#FFFFFF'
+  				},
+  				accent: {
+  					DEFAULT: '#E5E0FF',
+  					foreground: '#1A1A2E'
+  				},
+  				light: '#FFF2F2',
+  				dark: '#2C3E50',
+  				text: {
+  					primary: '#1A1A2E',
+  					secondary: '#4A5568'
+  				},
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',

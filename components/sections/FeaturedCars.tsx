@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Heart, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Car } from "@/types";
@@ -21,7 +22,7 @@ const sampleCars: Car[] = [
     transmission: "Automatic",
     price: "₹14.2 L",
     emi: "₹28,500/mo",
-    images: ["https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600&h=400&fit=crop"],
+    images: ["/car1.jpg"],
     featured: true,
     badge: "Featured",
     inspectionPassed: true,
@@ -38,7 +39,7 @@ const sampleCars: Car[] = [
     transmission: "Automatic",
     price: "₹55.5 L",
     emi: "₹1,10,000/mo",
-    images: ["https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&h=400&fit=crop"],
+    images: ["/car2.jpg"],
     badge: "New Arrival",
     inspectionPassed: true,
   },
@@ -54,7 +55,7 @@ const sampleCars: Car[] = [
     transmission: "Automatic",
     price: "₹18.9 L",
     emi: "₹37,500/mo",
-    images: ["https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=600&h=400&fit=crop"],
+    images: ["/car3.jpg"],
     inspectionPassed: true,
   },
   {
@@ -69,7 +70,7 @@ const sampleCars: Car[] = [
     transmission: "Automatic",
     price: "₹9.8 L",
     emi: "₹19,500/mo",
-    images: ["https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=600&h=400&fit=crop"],
+    images: ["/car4.jpg"],
     badge: "Best Deal",
     inspectionPassed: true,
   },
@@ -85,7 +86,7 @@ const sampleCars: Car[] = [
     transmission: "Automatic",
     price: "₹7.5 L",
     emi: "₹15,000/mo",
-    images: ["https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=600&h=400&fit=crop"],
+    images: ["/car5.jpg"],
     inspectionPassed: true,
   },
   {
@@ -100,7 +101,7 @@ const sampleCars: Car[] = [
     transmission: "Automatic",
     price: "₹32.5 L",
     emi: "₹64,500/mo",
-    images: ["https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=600&h=400&fit=crop"],
+    images: ["/car6.jpg"],
     inspectionPassed: true,
   },
 ];
@@ -121,57 +122,73 @@ const FeaturedCars = () => {
   };
 
   return (
-    <section id="cars" className="py-20 bg-white">
+    <section id="cars" className="py-12 lg:py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-12 animate-slide-up">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-8 lg:mb-12"
+        >
           <span className="text-sm font-semibold text-primary uppercase tracking-wider">
             Premium Collection
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-text-primary mt-4 mb-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-text-primary mt-2 sm:mt-4 mb-2 sm:mb-4">
             Handpicked Luxury Vehicles
           </h2>
-          <p className="text-text-secondary max-w-2xl mx-auto">
+          <p className="text-text-secondary max-w-2xl mx-auto text-sm sm:text-base">
             Each vehicle undergoes a comprehensive 200-point quality inspection
             to ensure you get the best value for your investment.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Filter Tabs */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12 animate-slide-up">
+        {/* Filter Tabs - Simplified */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="flex flex-wrap justify-center gap-2 mb-8 lg:mb-12"
+        >
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => setActiveCategory(category)}
-              className={`px-6 py-2 rounded-lg font-medium transition-all ${
+              className={`px-4 py-2 rounded-full font-medium transition-all text-sm sm:text-base ${
                 activeCategory === category
-                  ? "bg-primary text-white shadow-lg"
+                  ? "bg-primary text-white shadow-md"
                   : "bg-accent text-text-secondary hover:bg-secondary hover:text-white"
               }`}
             >
               {category}
             </button>
           ))}
-        </div>
+        </motion.div>
 
-        {/* Car Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Car Grid - Compact Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
           {filteredCars.map((car, index) => (
-            <div
+            <motion.div
               key={car.id}
-              className="bg-white rounded-xl shadow-md overflow-hidden group cursor-pointer border border-gray-100 hover-lift"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.05 }}
+              whileHover={{ y: -4 }}
+              className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group"
             >
-              {/* Image Container */}
-              <div className="relative h-48 overflow-hidden">
+              {/* Image Container - Compact */}
+              <div className="relative h-40 lg:h-48 overflow-hidden">
                 <Image
-                  src={car.images[0]}
+                  src={`https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=600&q=80&sig=${car.id}`}
                   alt={car.name}
-                  width={600}
-                  height={400}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 {car.badge && (
-                  <div className="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-full text-xs font-semibold">
+                  <div className="absolute top-3 left-3 bg-primary text-white px-2 py-1 rounded-full text-xs font-semibold">
                     {car.badge}
                   </div>
                 )}
@@ -180,64 +197,56 @@ const FeaturedCars = () => {
                     e.stopPropagation();
                     toggleFavorite(car.id);
                   }}
-                  className="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
+                  className="absolute top-3 right-3 p-1.5 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
                 >
                   <Heart
                     className={`h-4 w-4 ${
                       favorites.includes(car.id)
                         ? "fill-red-500 text-red-500"
-                        : "text-gray-400"
+                        : "text-gray-600"
                     }`}
                   />
                 </button>
               </div>
 
-              {/* Car Details */}
-              <div className="p-5">
-                <div className="mb-3">
-                  <h3 className="text-lg font-semibold text-text-primary mb-1">
-                    {car.name}
-                  </h3>
-                  <p className="text-sm text-text-secondary">
-                    {car.year} • {car.variant}
-                  </p>
+              {/* Content - Compact */}
+              <div className="p-4 lg:p-5">
+                <div className="flex items-start justify-between mb-2">
+                  <div>
+                    <h3 className="text-base lg:text-lg font-bold text-text-primary">
+                      {car.name}
+                    </h3>
+                    <p className="text-xs lg:text-sm text-text-secondary">{car.variant} • {car.year}</p>
+                  </div>
+                  {car.inspectionPassed && (
+                    <CheckCircle2 className="h-4 w-4 lg:h-5 lg:w-5 text-green-500 flex-shrink-0" />
+                  )}
                 </div>
 
-                <div className="grid grid-cols-3 gap-3 mb-4 text-xs">
-                  <div className="text-center">
-                    <p className="text-text-secondary">Mileage</p>
-                    <p className="font-medium text-text-primary">{car.mileage}</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-text-secondary">Fuel</p>
-                    <p className="font-medium text-text-primary">{car.fuelType}</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-text-secondary">Transmission</p>
-                    <p className="font-medium text-text-primary">{car.transmission}</p>
-                  </div>
+                {/* Specs Row - Compact */}
+                <div className="flex items-center gap-3 mb-3 text-xs text-text-secondary">
+                  <span>{car.mileage}</span>
+                  <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                  <span>{car.fuelType}</span>
+                  <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                  <span>{car.transmission}</span>
                 </div>
 
-                <div className="border-t pt-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <p className="text-xl font-bold text-primary">{car.price}</p>
-                      <p className="text-xs text-text-secondary">{car.emi}</p>
-                    </div>
-                    {car.inspectionPassed && (
-                      <div className="flex items-center space-x-1 text-green-600">
-                        <CheckCircle2 className="h-4 w-4" />
-                        <span className="text-xs font-medium">Certified</span>
-                      </div>
-                    )}
+                {/* Price Section */}
+                <div className="flex items-end justify-between">
+                  <div>
+                    <p className="text-lg lg:text-xl font-bold text-text-primary">{car.price}</p>
+                    <p className="text-xs text-text-secondary">EMI {car.emi}</p>
                   </div>
-
-                  <Button className="w-full bg-primary hover:bg-primary/90 text-white rounded-lg hover-lift">
-                    View Details
+                  <Button 
+                    size="sm"
+                    className="rounded-full bg-primary hover:bg-primary/90 text-white text-xs lg:text-sm"
+                  >
+                    View
                   </Button>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
@@ -246,6 +255,5 @@ const FeaturedCars = () => {
 };
 
 export default FeaturedCars;
-
 
 

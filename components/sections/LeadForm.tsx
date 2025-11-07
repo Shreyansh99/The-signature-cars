@@ -1,288 +1,399 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import {
+  BadgeCheck,
+  Shield,
+  Clock,
+  Users,
+  User,
+  Mail,
+  Phone,
+  CheckCircle2,
+  Loader2,
+  MessageSquare,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Check, Send, Star, ThumbsUp, Users } from "lucide-react";
-import { useState } from "react";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Label } from "@/components/ui/label";
 
-const phoneNumberRegex = new RegExp(
-  /^([+]?d{1,2}[-s]?)?d{3}[-s]?d{3}[-s]?d{4}$/
-);
-
-const lookingForOptions = [
-  "Not Sure",
-  "New Car",
-  "Pre-owned Car",
-  "Sell Car",
-  "Car Service",
-  "Car Insurance",
-  "Other",
-];
-
-const formSchema = z.object({
-  fullName: z.string().min(2, {
-    message: "Full name must be at least 2 characters.",
-  }),
-  phoneNumber: z.string().refine((value) => phoneNumberRegex.test(value), {
-    message: "Invalid phone number format.",
-  }),
-  lookingFor: z.string().refine((value) => lookingForOptions.includes(value), {
-    message: "Please select a valid option.",
-  }),
-  message: z.string().optional(),
+// Zod validation schema
+const leadFormSchema = z.object({
+  fullName: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  phone: z
+    .string()
+    .regex(/^[0-9]{10}$/, "Phone number must be exactly 10 digits"),
+  lookingFor: z.string().min(1, "Please select what you're looking for"),
+  budget: z.string().optional(),
 });
 
-const LeadForm = () => {
+type LeadFormData = z.infer<typeof leadFormSchema>;
+
+interface LeadFormProps {
+  onSuccess?: () => void;
+}
+
+const LeadForm: React.FC<LeadFormProps> = ({ onSuccess }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [referenceNumber, setReferenceNumber] = useState("");
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      fullName: "",
-      phoneNumber: "",
-      lookingFor: "Not Sure",
-      message: "",
-    },
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<LeadFormData>({
+    resolver: zodResolver(leadFormSchema),
   });
 
-  const openWhatsApp = () => {
-    const phoneNumber = "+919212121212";
-    const message = "Hello, I would like to know more about your services.";
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-      message
-    )}`;
-    window.open(whatsappUrl, "_blank");
+  const onSubmit = async (data: LeadFormData) => {
+    setIsSubmitting(true);
+    
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    
+    // Generate reference number
+    const refNum = `TSC${Date.now().toString().slice(-8)}`;
+    setReferenceNumber(refNum);
+    
+    setIsSubmitting(false);
+    setShowSuccessModal(true);
+    reset();
+    
+    // Call onSuccess callback if provided (for modal close)
+    if (onSuccess) {
+      onSuccess();
+    }
   };
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsSubmitting(true);
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setShowSuccessModal(true);
-      form.reset();
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      alert("An error occurred. Please try again later.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
+  const benefits = [
+    {
+      icon: BadgeCheck,
+      title: "Best Price Guarantee",
+      description: "We match or beat any competitor's price",
+    },
+    {
+      icon: Shield,
+      title: "100% Safe & Secure",
+      description: "Your data is encrypted and protected",
+    },
+    {
+      icon: Clock,
+      title: "Quick Response (2 hours)",
+      description: "Our experts will contact you within 2 hours",
+    },
+    {
+      icon: Users,
+      title: "Expert Guidance",
+      description: "10+ years of industry experience",
+    },
+  ];
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5 },
+    },
+  };
 
   return (
-    <section
-      id="contact"
-      className="w-full py-20 bg-gradient-to-br from-light to-accent"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
-          {/* Left Side - Form */}
-          <div className="bg-white p-8 rounded-2xl shadow-lg animate-slide-up">
-            <h2 className="text-3xl font-bold text-text-primary mb-2">
-              Get in Touch
-            </h2>
-            <p className="text-text-secondary mb-6">
-              Have questions or need assistance? Fill out the form below, and
-              we&apos;ll get back to you shortly.
-            </p>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-6"
-              >
-                <FormField
-                  control={form.control}
-                  name="fullName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Full Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., John Doe" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="phoneNumber"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Phone Number</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., 9876543210" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="lookingFor"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>You are looking for?</FormLabel>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-2">
-                        {lookingForOptions.map((option) => (
-                          <Button
-                            key={option}
-                            type="button"
-                            variant={field.value === option ? "default" : "outline"}
-                            onClick={() => field.onChange(option)}
-                            className="w-full flex items-center justify-center transition-all"
-                          >
-                            {field.value === option && (
-                              <Check className="w-4 h-4 mr-2" />
-                            )}
-                            {option}
-                          </Button>
-                        ))}
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="message"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Message (Optional)</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Any specific details or questions?"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="w-full bg-primary hover:bg-primary/90 text-white rounded-lg hover-lift"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Submitting..." : "Submit Inquiry"}
-                  <Send className="ml-2 h-5 w-5" />
-                </Button>
-              </form>
-            </Form>
+    <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+      <div className="grid lg:grid-cols-2">
+        {/* Left Column - Benefits - Compact */}
+        <motion.div
+          variants={itemVariants}
+          className="bg-white p-4 lg:p-6 text-text-primary border-r border-gray-200"
+        >
+          <div className="inline-block px-3 py-1.5 bg-primary/10 rounded-full text-xs font-semibold mb-3 text-primary">
+            THE SIGNATURE CARS ADVANTAGE
           </div>
 
-          {/* Right Side - Contact Info & Testimonials */}
-          <div className="space-y-8">
-            {/* Contact Info */}
-            <div className="bg-white p-8 rounded-2xl shadow-lg animate-slide-up">
-              <h3 className="text-2xl font-bold text-text-primary mb-4">
-                Why Choose Us?
-              </h3>
-              <div className="space-y-4 text-text-secondary">
-                <div className="flex items-start space-x-3">
-                  <div className="bg-primary/10 p-2 rounded-full">
-                    <Star className="h-5 w-5 text-primary" />
-                  </div>
-                  <p>
-                    <span className="font-semibold text-text-primary">
-                      Quality You Can Trust:
-                    </span>{" "}
-                    Every car is hand-picked and passes a rigorous 200-point
-                    inspection.
-                  </p>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="bg-primary/10 p-2 rounded-full">
-                    <ThumbsUp className="h-5 w-5 text-primary" />
-                  </div>
-                  <p>
-                    <span className="font-semibold text-text-primary">
-                      Transparent Pricing:
-                    </span>{" "}
-                    No hidden fees. The price you see is the price you pay.
-                  </p>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="bg-primary/10 p-2 rounded-full">
-                    <Users className="h-5 w-5 text-primary" />
-                  </div>
-                  <p>
-                    <span className="font-semibold text-text-primary">
-                      Customer-First Approach:
-                    </span>{" "}
-                    We&apos;re dedicated to making your car buying experience
-                    exceptional.
-                  </p>
-                </div>
-              </div>
-              <Button
-                onClick={openWhatsApp}
-                className="w-full mt-6 bg-green-500 hover:bg-green-600 text-white rounded-lg hover-lift"
-              >
-                Chat on WhatsApp
-              </Button>
-            </div>
+          <h2 className="text-2xl lg:text-3xl font-bold mb-2 text-text-primary">
+            Get Your Dream Car Quote in 30 Seconds
+          </h2>
 
-            {/* Testimonial */}
-            <div className="bg-white p-8 rounded-2xl shadow-lg animate-slide-up">
-              <div className="flex items-center mb-4">
-                <div className="flex text-yellow-400">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} fill="currentColor" className="h-5 w-5" />
-                  ))}
+          <p className="text-text-secondary mb-4">
+            Fill out the form and our expert team will contact you within 2
+            hours with the best deals.
+          </p>
+
+          {/* Benefits List - Compact */}
+          <div className="space-y-3 mb-4">
+            {benefits.map((benefit, index) => (
+              <motion.div
+                key={benefit.title}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.08 }}
+                className="flex items-start space-x-3"
+              >
+                <div className="bg-primary/10 p-2.5 rounded-lg flex-shrink-0">
+                  <benefit.icon className="h-5 w-5 text-primary" />
                 </div>
-                <p className="ml-2 text-sm font-bold text-text-primary">
-                  5.0 rating based on 1,200+ reviews
-                </p>
-              </div>
-              <blockquote className="text-text-secondary italic">
-                &quot;The best car buying experience I&apos;ve ever had. The team
-                was professional, the process was seamless, and I got a fantastic
-                deal on my dream car. Highly recommended!&quot;
-              </blockquote>
-              <p className="mt-4 font-semibold text-text-primary">- Aman Gupta</p>
+                <div>
+                  <h3 className="font-semibold text-sm mb-0.5 text-text-primary">{benefit.title}</h3>
+                  <p className="text-xs text-text-secondary">{benefit.description}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Trust Stats - Compact */}
+          <div className="grid grid-cols-3 gap-3 pt-4 border-t border-gray-200">
+            <div>
+              <p className="text-lg lg:text-xl font-bold text-text-primary">10,000+</p>
+              <p className="text-xs text-text-secondary">Happy Customers</p>
+            </div>
+            <div>
+              <p className="text-lg lg:text-xl font-bold text-text-primary">4.9/5</p>
+              <p className="text-xs text-text-secondary">Rating</p>
+            </div>
+            <div>
+              <p className="text-lg lg:text-xl font-bold text-text-primary">1,000+</p>
+              <p className="text-xs text-text-secondary">Cars Sold</p>
             </div>
           </div>
-        </div>
+        </motion.div>
+
+        {/* Right Column - Form - Compact */}
+        <motion.div variants={itemVariants} className="p-4 lg:p-6">
+          <h3 className="text-xl lg:text-2xl font-bold text-text-primary mb-3">
+            Get Started in Seconds
+          </h3>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+            {/* Full Name - Compact */}
+            <div>
+              <Label htmlFor="fullName" className="flex items-center space-x-2 mb-1.5 text-sm">
+                <User className="h-4 w-4 text-primary" />
+                <span>Full Name *</span>
+              </Label>
+              <Input
+                id="fullName"
+                {...register("fullName")}
+                placeholder="Enter your full name"
+                className={errors.fullName ? "border-red-500" : ""}
+              />
+              {errors.fullName && (
+                <p className="text-red-500 text-xs mt-1">{errors.fullName.message}</p>
+              )}
+            </div>
+
+            {/* Email - Compact */}
+            <div>
+              <Label htmlFor="email" className="flex items-center space-x-2 mb-1.5 text-sm">
+                <Mail className="h-4 w-4 text-primary" />
+                <span>Email Address *</span>
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                {...register("email")}
+                placeholder="your.email@example.com"
+                className={errors.email ? "border-red-500" : ""}
+              />
+              {errors.email && (
+                <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
+              )}
+            </div>
+
+            {/* Phone - Compact */}
+            <div>
+              <Label htmlFor="phone" className="flex items-center space-x-2 mb-1.5 text-sm">
+                <Phone className="h-4 w-4 text-primary" />
+                <span>Phone Number *</span>
+              </Label>
+              <Input
+                id="phone"
+                type="tel"
+                {...register("phone")}
+                placeholder="9876543210"
+                maxLength={10}
+                className={errors.phone ? "border-red-500" : ""}
+              />
+              {errors.phone && (
+                <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>
+              )}
+            </div>
+
+            {/* Looking For - Compact */}
+            <div>
+              <Label htmlFor="lookingFor" className="mb-1.5 block text-sm">
+                What are you looking for? *
+              </Label>
+              <select
+                {...register("lookingFor")}
+                className={`w-full px-3 py-2 text-sm border rounded-md ${
+                  errors.lookingFor ? "border-red-500" : "border-gray-300"
+                }`}
+              >
+                <option value="">Select an option</option>
+                <option value="Sedan">Sedan</option>
+                <option value="SUV">SUV</option>
+                <option value="Hatchback">Hatchback</option>
+                <option value="Luxury">Luxury</option>
+                <option value="Electric">Electric</option>
+                <option value="Not Sure">Not Sure</option>
+              </select>
+              {errors.lookingFor && (
+                <p className="text-red-500 text-xs mt-1">{errors.lookingFor.message}</p>
+              )}
+            </div>
+
+            {/* Budget - Compact */}
+            <div>
+              <Label htmlFor="budget" className="mb-1.5 block text-sm">
+                Your Budget
+              </Label>
+              <select
+                {...register("budget")}
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md"
+              >
+                <option value="">Select budget range</option>
+                <option value="Under 5L">Under ₹5L</option>
+                <option value="5-10L">₹5L - ₹10L</option>
+                <option value="10-20L">₹10L - ₹20L</option>
+                <option value="20-30L">₹20L - ₹30L</option>
+                <option value="30L+">₹30L+</option>
+                <option value="Flexible">Flexible</option>
+              </select>
+            </div>
+
+            {/* Submit Button - Compact */}
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full bg-primary hover:bg-primary/90 text-white py-2.5 rounded-full font-semibold transition-all text-sm"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  <CheckCircle2 className="mr-2 h-4 w-4" />
+                  Get Instant Quote
+                </>
+              )}
+            </Button>
+          </form>
+        </motion.div>
       </div>
 
       {/* Success Modal */}
-      {showSuccessModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full text-center p-8 animate-scale-in">
-            <div className="mx-auto bg-green-100 rounded-full h-20 w-20 flex items-center justify-center mb-6">
-              <Check className="h-12 w-12 text-green-600" />
-            </div>
-            <h2 className="text-3xl font-bold text-text-primary mb-4">
-              Submission Successful!
-            </h2>
-            <p className="text-text-secondary mb-8">
-              Thank you for reaching out. We&apos;ve received your inquiry and one
-              of our team members will contact you within 24 hours.
-            </p>
-            <Button
-              onClick={() => setShowSuccessModal(false)}
-              className="w-full bg-primary hover:bg-primary/90 text-white rounded-lg hover-lift"
+      <AnimatePresence>
+        {showSuccessModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowSuccessModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: "spring", damping: 20, stiffness: 300 }}
+              className="bg-white rounded-2xl p-8 max-w-md w-full relative"
+              onClick={(e) => e.stopPropagation()}
             >
-              Close
-            </Button>
-          </div>
-        </div>
-      )}
-    </section>
+              {/* Confetti Effect */}
+              <div className="absolute inset-0 pointer-events-none">
+                {[...Array(20)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute w-2 h-2 bg-primary rounded-full"
+                    initial={{
+                      x: "50%",
+                      y: "50%",
+                      opacity: 1,
+                    }}
+                    animate={{
+                      x: `${Math.random() * 100}%`,
+                      y: `${Math.random() * 100}%`,
+                      opacity: 0,
+                    }}
+                    transition={{
+                      duration: 1,
+                      delay: i * 0.05,
+                    }}
+                  />
+                ))}
+              </div>
+
+              <div className="text-center">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                  className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6"
+                >
+                  <CheckCircle2 className="h-10 w-10 text-green-600" />
+                </motion.div>
+
+                <h3 className="text-2xl font-bold text-text-primary mb-2">
+                  Thank You!
+                </h3>
+                <p className="text-text-secondary mb-4">
+                  We've received your request. Our expert team will contact you
+                  within 2 hours.
+                </p>
+
+                <div className="bg-accent/50 rounded-lg p-4 mb-6">
+                  <p className="text-sm text-text-secondary mb-1">
+                    Your Reference Number
+                  </p>
+                  <p className="text-xl font-bold text-primary">{referenceNumber}</p>
+                </div>
+
+                <Button
+                  onClick={() =>
+                    window.open(
+                      "https://wa.me/919876543210?text=Hi, I just submitted a quote request. My reference number is " +
+                        referenceNumber,
+                      "_blank"
+                    )
+                  }
+                  className="w-full bg-green-600 hover:bg-green-700 text-white mb-3"
+                >
+                  <MessageSquare className="mr-2 h-4 w-4" />
+                  Chat on WhatsApp Now
+                </Button>
+
+                <Button
+                  variant="outline"
+                  onClick={() => setShowSuccessModal(false)}
+                  className="w-full"
+                >
+                  Close
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
 
