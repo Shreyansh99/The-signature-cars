@@ -37,7 +37,7 @@ const TestimonialCard = ({ testimonial }: TestimonialCardProps) => {
 
       {/* Review Text */}
       <p className="text-text-secondary text-sm mb-4 leading-relaxed">
-        "{testimonial.review}"
+        &ldquo;{testimonial.review}&rdquo;
       </p>
 
       {/* Purchase Info */}

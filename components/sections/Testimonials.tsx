@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { Testimonial } from "@/types";
 import Image from "next/image";
@@ -103,6 +103,12 @@ const Testimonials = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const handleNext = useCallback(() => {
+    setCurrentIndex((prev) =>
+      prev + cardsToShow >= testimonials.length ? 0 : prev + 1
+    );
+  }, [cardsToShow]);
+
   // Auto-play functionality
   useEffect(() => {
     if (!isPaused) {
@@ -111,13 +117,7 @@ const Testimonials = () => {
       }, 5000);
       return () => clearInterval(interval);
     }
-  }, [currentIndex, isPaused, cardsToShow]);
-
-  const handleNext = () => {
-    setCurrentIndex((prev) =>
-      prev + cardsToShow >= testimonials.length ? 0 : prev + 1
-    );
-  };
+  }, [isPaused, handleNext]);
 
   const handlePrev = () => {
     setCurrentIndex((prev) =>

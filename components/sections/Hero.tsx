@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Car, ShieldCheck, Handshake } from "lucide-react";
+import Image from "next/image";
 
 const Hero = () => {
   const features = [
@@ -65,9 +66,12 @@ const Hero = () => {
 
           {/* Right Column - Image */}
           <div className="relative hidden lg:block animate-fade-in">
-            <img
+            <Image
               src="/images/hero-car.png"
               alt="Luxury Car"
+              width={800}
+              height={600}
+              priority
               className="w-full h-auto object-contain drop-shadow-2xl"
             />
           </div>
@@ -96,5 +100,6 @@ const Hero = () => {
 };
 
 export default Hero;
+
 
 

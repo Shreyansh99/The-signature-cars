@@ -126,7 +126,7 @@ const WhyChooseUs = () => {
           </h2>
           <p className="text-text-secondary max-w-2xl mx-auto">
             Experience premium service and unmatched quality with every purchase.
-            We're committed to making your car buying journey smooth and hassle-free.
+            We&apos;re committed to making your car buying journey smooth and hassle-free.
           </p>
         </div>
 
