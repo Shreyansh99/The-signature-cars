@@ -356,7 +356,7 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSuccess }) => {
                   Thank You!
                 </h3>
                 <p className="text-text-secondary mb-4">
-                  We've received your request. Our expert team will contact you
+                  We&apos;ve received your request. Our expert team will contact you
                   within 2 hours.
                 </p>
 
@@ -370,10 +370,10 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSuccess }) => {
                 <Button
                   onClick={() =>
                     window.open(
-                      "https://wa.me/919876543210?text=Hi, I just submitted a quote request. My reference number is " +
-                        referenceNumber,
-                      "_blank"
-                    )
+                    "https://wa.me/919876543210?text=Hi%2C%20I%20just%20submitted%20a%20quote%20request.%20My%20reference%20number%20is%20" +
+                      referenceNumber,
+                    "_blank"
+                  )
                   }
                   className="w-full bg-green-600 hover:bg-green-700 text-white mb-3"
                 >
