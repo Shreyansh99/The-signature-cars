@@ -88,11 +88,11 @@ const WhyChooseUs = () => {
 
 
   return (
-    <section id="why-choose-us" className="py-12 lg:py-16 bg-white">
+    <section id="why-choose-us" className="py-8 lg:py-12 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header - More Conversion Focused */}
         <motion.div
-          className="text-center mb-12 lg:mb-16"
+          className="text-center mb-8 lg:mb-12"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
@@ -101,7 +101,7 @@ const WhyChooseUs = () => {
           <span className="text-sm font-semibold text-primary uppercase tracking-wider">
             TRUSTED BY 10,000+ CUSTOMERS
           </span>
-          <h2 className="text-3xl lg:text-4xl font-bold text-text-primary mt-4 mb-4">
+          <h2 className="text-3xl lg:text-4xl font-bold text-text-primary mt-3 mb-3">
             Why Smart Buyers Choose Signature Cars
           </h2>
           <p className="text-text-secondary max-w-2xl mx-auto text-lg">
@@ -111,7 +111,7 @@ const WhyChooseUs = () => {
 
         {/* Top Guarantees - Immediate Trust Building */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 lg:mb-16"
+          className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 lg:mb-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
@@ -120,14 +120,14 @@ const WhyChooseUs = () => {
           {guarantees.map((guarantee, index) => (
             <motion.div
               key={guarantee.title}
-              className="bg-gray-50 rounded-xl p-6 border border-gray-200"
+              className="bg-gray-50 rounded-xl p-4 border border-gray-200"
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.4, delay: index * 0.1 }}
             >
-              <guarantee.icon className="h-8 w-8 text-primary mb-3" />
-              <h3 className="text-lg font-bold text-text-primary mb-2">
+              <guarantee.icon className="h-8 w-8 text-primary mb-2" />
+              <h3 className="text-lg font-bold text-text-primary mb-1">
                 {guarantee.title}
               </h3>
               <p className="text-sm text-text-secondary">
@@ -138,31 +138,31 @@ const WhyChooseUs = () => {
         </motion.div>
 
         {/* Features Grid - Focused on Benefits */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-12 lg:mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 mb-8 lg:mb-12">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
-              className="bg-gray-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200 hover:border-primary/30 group"
+              className="bg-gray-50 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200 hover:border-primary/30 group"
               initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.45, delay: index * 0.1 }}
             >
               {/* Icon Container */}
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-lg mb-4">
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-lg mb-3">
                 <feature.icon className="h-5 w-5 text-white" />
               </div>
 
               {/* Content */}
-              <h3 className="text-xl font-bold text-text-primary mb-3">
+              <h3 className="text-xl font-bold text-text-primary mb-2">
                 {feature.title}
               </h3>
-              <p className="text-text-secondary mb-4 font-medium">
+              <p className="text-text-secondary mb-3 font-medium">
                 {feature.description}
               </p>
 
               {/* Sub-points */}
-              <ul className="space-y-2">
+              <ul className="space-y-1.5">
                 {feature.subPoints.map((point, idx) => (
                   <li
                     key={idx}
@@ -183,15 +183,15 @@ const WhyChooseUs = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="bg-white rounded-2xl p-8 lg:p-12 text-center border border-gray-200 shadow-sm"
+          className="bg-white rounded-2xl p-6 lg:p-8 text-center border border-gray-200 shadow-sm"
         >
-          <h3 className="text-2xl lg:text-3xl font-bold mb-4 text-text-primary">
+          <h3 className="text-2xl lg:text-3xl font-bold mb-3 text-text-primary">
             Ready to Experience the Signature Difference?
           </h3>
-          <p className="text-lg mb-6 text-text-secondary max-w-2xl mx-auto">
+          <p className="text-lg mb-4 text-text-secondary max-w-2xl mx-auto">
             Join thousands of satisfied customers who got their dream car with complete peace of mind
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <Button 
               size="lg" 
               className="bg-primary hover:bg-primary/90 text-white px-8 py-3 text-lg font-semibold"
@@ -209,7 +209,7 @@ const WhyChooseUs = () => {
               Call Now: +91 99999 99999
             </Button>
           </div>
-          <p className="text-sm mt-4 opacity-75">
+          <p className="text-sm mt-3 opacity-75">
             Limited time offer: Get ₹25,000 off on your first purchase
           </p>
         </motion.div>
