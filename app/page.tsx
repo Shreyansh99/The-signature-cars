@@ -2,8 +2,8 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Hero from "@/components/sections/Hero";
 import FeaturedCars from "@/components/sections/FeaturedCars";
-import WhyChooseUs from "@/components/sections/WhyChooseUs";
-import Testimonials from "@/components/sections/Testimonials";
+// import WhyChooseUs from "@/components/sections/WhyChooseUs";
+// import Testimonials from "@/components/sections/Testimonials";
 import LeadForm from "@/components/sections/LeadForm";
 
 export default function Home() {
@@ -12,8 +12,8 @@ export default function Home() {
       <Navbar />
       <Hero />
       <FeaturedCars />
-      <Testimonials />
-      <WhyChooseUs />
+      {/* <Testimonials /> */}
+      {/* <WhyChooseUs /> */}
       <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="text-center mb-12">

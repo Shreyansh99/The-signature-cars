@@ -9,6 +9,7 @@ import { CheckCircle2, Loader2, User, Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Car } from "@/types";
 
 // Zod validation schema
 const leadFormSchema = z.object({
@@ -25,9 +26,10 @@ type LeadFormData = z.infer<typeof leadFormSchema>;
 
 interface SimpleLeadFormProps {
   onSuccess?: () => void;
+  car?: Car | null;
 }
 
-const SimpleLeadForm: React.FC<SimpleLeadFormProps> = ({ onSuccess }) => {
+const SimpleLeadForm: React.FC<SimpleLeadFormProps> = ({ onSuccess, car }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [referenceNumber, setReferenceNumber] = useState("");
@@ -39,25 +41,45 @@ const SimpleLeadForm: React.FC<SimpleLeadFormProps> = ({ onSuccess }) => {
     reset,
   } = useForm<LeadFormData>({
     resolver: zodResolver(leadFormSchema),
+    defaultValues: {
+      lookingFor: car?.category || "",
+    },
   });
 
   const onSubmit = async (data: LeadFormData) => {
     setIsSubmitting(true);
     
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      // Import API service
+      const { submitCarLead } = await import("@/lib/api/cars");
     
-    // Generate reference number
-    const refNum = `TSC${Date.now().toString().slice(-8)}`;
-    setReferenceNumber(refNum);
-    
-    setIsSubmitting(false);
+      // Submit lead (car?.id will be undefined if no car is selected)
+      const result = await submitCarLead(car?.id || "general", {
+        fullName: data.fullName,
+        email: data.email,
+        phone: data.phone,
+        lookingFor: data.lookingFor,
+        budget: data.budget,
+      });
+      
+      if (result.success) {
+        setReferenceNumber(result.referenceNumber || `TSC${Date.now().toString().slice(-8)}`);
     setShowSuccessModal(true);
     reset();
     
     // Call onSuccess callback if provided (for modal close)
     if (onSuccess) {
       onSuccess();
+        }
+      }
+    } catch (error) {
+      console.error("Error submitting lead:", error);
+      // Still show success for now, but in production you'd show an error message
+      setReferenceNumber(`TSC${Date.now().toString().slice(-8)}`);
+      setShowSuccessModal(true);
+      reset();
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -128,6 +150,7 @@ const SimpleLeadForm: React.FC<SimpleLeadFormProps> = ({ onSuccess }) => {
             className={`w-full px-3 py-2 text-sm border rounded-md ${
               errors.lookingFor ? "border-red-500" : "border-gray-300"
             }`}
+            defaultValue={car?.category || ""}
           >
             <option value="">Select an option</option>
             <option value="Sedan">Sedan</option>

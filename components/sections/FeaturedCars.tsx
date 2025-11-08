@@ -1,121 +1,49 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Heart, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Car } from "@/types";
 import Image from "next/image";
+import Link from "next/link";
+import { fetchAllCars } from "@/lib/api/cars";
 
 const categories = ["All Cars", "Sedan", "SUV", "Hatchback", "Luxury", "Electric"];
-
-const sampleCars: Car[] = [
-  {
-    id: "1",
-    name: "Mercedes-Benz C-Class",
-    year: 2023,
-    variant: "C 220d",
-    brand: "Mercedes-Benz",
-    category: "Sedan",
-    mileage: "15,420 km",
-    fuelType: "Diesel",
-    transmission: "Automatic",
-    price: "₹14.2 L",
-    emi: "₹28,500/mo",
-    images: ["/car1.jpg"],
-    featured: true,
-    badge: "Featured",
-    inspectionPassed: true,
-  },
-  {
-    id: "2",
-    name: "BMW X5",
-    year: 2022,
-    variant: "xDrive30d",
-    brand: "BMW",
-    category: "SUV",
-    mileage: "22,100 km",
-    fuelType: "Diesel",
-    transmission: "Automatic",
-    price: "₹55.5 L",
-    emi: "₹1,10,000/mo",
-    images: ["/car2.jpg"],
-    badge: "New Arrival",
-    inspectionPassed: true,
-  },
-  {
-    id: "3",
-    name: "Audi A4",
-    year: 2023,
-    variant: "Premium Plus",
-    brand: "Audi",
-    category: "Sedan",
-    mileage: "8,500 km",
-    fuelType: "Petrol",
-    transmission: "Automatic",
-    price: "₹18.9 L",
-    emi: "₹37,500/mo",
-    images: ["/car3.jpg"],
-    inspectionPassed: true,
-  },
-  {
-    id: "4",
-    name: "Hyundai Creta",
-    year: 2023,
-    variant: "SX (O) Turbo",
-    brand: "Hyundai",
-    category: "SUV",
-    mileage: "12,300 km",
-    fuelType: "Petrol",
-    transmission: "Automatic",
-    price: "₹9.8 L",
-    emi: "₹19,500/mo",
-    images: ["/car4.jpg"],
-    badge: "Best Deal",
-    inspectionPassed: true,
-  },
-  {
-    id: "5",
-    name: "Honda City",
-    year: 2023,
-    variant: "VX CVT",
-    brand: "Honda",
-    category: "Sedan",
-    mileage: "10,200 km",
-    fuelType: "Petrol",
-    transmission: "Automatic",
-    price: "₹7.5 L",
-    emi: "₹15,000/mo",
-    images: ["/car5.jpg"],
-    inspectionPassed: true,
-  },
-  {
-    id: "6",
-    name: "Toyota Fortuner",
-    year: 2022,
-    variant: "4x4 AT",
-    brand: "Toyota",
-    category: "SUV",
-    mileage: "25,000 km",
-    fuelType: "Diesel",
-    transmission: "Automatic",
-    price: "₹32.5 L",
-    emi: "₹64,500/mo",
-    images: ["/car6.jpg"],
-    inspectionPassed: true,
-  },
-];
 
 const FeaturedCars = () => {
   const [activeCategory, setActiveCategory] = useState("All Cars");
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [cars, setCars] = useState<Car[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch cars using the API service layer
+  useEffect(() => {
+    const loadCars = async () => {
+      try {
+        setIsLoading(true);
+        const fetchedCars = await fetchAllCars();
+        setCars(fetchedCars);
+      } catch (error) {
+        console.error("Error loading cars:", error);
+        // Fallback to empty array on error
+        setCars([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadCars();
+  }, []);
 
   const filteredCars =
     activeCategory === "All Cars"
-      ? sampleCars
-      : sampleCars.filter((car) => car.category === activeCategory);
+      ? cars
+      : cars.filter((car) => car.category === activeCategory);
 
-  const toggleFavorite = (id: string) => {
+  const toggleFavorite = (id: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setFavorites((prev) =>
       prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
     );
@@ -167,88 +95,109 @@ const FeaturedCars = () => {
           ))}
         </motion.div>
 
+        {/* Loading State */}
+        {isLoading && (
+          <div className="text-center py-12">
+            <p className="text-text-secondary">Loading cars...</p>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!isLoading && filteredCars.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-text-secondary">No cars found in this category.</p>
+        </div>
+        )}
+
         {/* Car Grid - Compact Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+        {!isLoading && filteredCars.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
           {filteredCars.map((car, index) => (
-            <motion.div
+            <Link
               key={car.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.05 }}
-              whileHover={{ y: -4 }}
-              className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group"
+              href={`/car/${car.id}`}
+              className="block"
             >
-              {/* Image Container - Compact */}
-              <div className="relative h-40 lg:h-48 overflow-hidden">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.05 }}
+                whileHover={{ y: -4 }}
+                className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group cursor-pointer"
+            >
+                {/* Image Container - Compact */}
+                <div className="relative h-40 lg:h-48 overflow-hidden">
                 <Image
-                  src={`https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=600&q=80&sig=${car.id}`}
+                    src={car.images[0] || `https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=600&q=80&sig=${car.id}`}
                   alt={car.name}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 {car.badge && (
-                  <div className="absolute top-3 left-3 bg-primary text-white px-2 py-1 rounded-full text-xs font-semibold">
+                    <div className="absolute top-3 left-3 bg-primary text-white px-2 py-1 rounded-full text-xs font-semibold">
                     {car.badge}
                   </div>
                 )}
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleFavorite(car.id);
-                  }}
-                  className="absolute top-3 right-3 p-1.5 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
+                    onClick={(e) => toggleFavorite(car.id, e)}
+                    className="absolute top-3 right-3 p-1.5 bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-colors z-10"
                 >
                   <Heart
                     className={`h-4 w-4 ${
                       favorites.includes(car.id)
                         ? "fill-red-500 text-red-500"
-                        : "text-gray-600"
+                          : "text-gray-600"
                     }`}
                   />
                 </button>
               </div>
 
-              {/* Content - Compact */}
-              <div className="p-4 lg:p-5">
-                <div className="flex items-start justify-between mb-2">
-                  <div>
-                    <h3 className="text-base lg:text-lg font-bold text-text-primary">
-                      {car.name}
-                    </h3>
-                    <p className="text-xs lg:text-sm text-text-secondary">{car.variant} • {car.year}</p>
+                {/* Content - Compact */}
+                <div className="p-4 lg:p-5">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <h3 className="text-base lg:text-lg font-bold text-text-primary">
+                        {car.name}
+                      </h3>
+                      <p className="text-xs lg:text-sm text-text-secondary">{car.variant} • {car.year}</p>
+                    </div>
+                    {car.inspectionPassed && (
+                      <CheckCircle2 className="h-4 w-4 lg:h-5 lg:w-5 text-green-500 flex-shrink-0" />
+                    )}
                   </div>
-                  {car.inspectionPassed && (
-                    <CheckCircle2 className="h-4 w-4 lg:h-5 lg:w-5 text-green-500 flex-shrink-0" />
-                  )}
-                </div>
 
-                {/* Specs Row - Compact */}
-                <div className="flex items-center gap-3 mb-3 text-xs text-text-secondary">
-                  <span>{car.mileage}</span>
-                  <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
-                  <span>{car.fuelType}</span>
-                  <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
-                  <span>{car.transmission}</span>
-                </div>
-
-                {/* Price Section */}
-                <div className="flex items-end justify-between">
-                  <div>
-                    <p className="text-lg lg:text-xl font-bold text-text-primary">{car.price}</p>
-                    <p className="text-xs text-text-secondary">EMI {car.emi}</p>
+                  {/* Specs Row - Compact */}
+                  <div className="flex items-center gap-3 mb-3 text-xs text-text-secondary">
+                    <span>{car.mileage}</span>
+                    <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                    <span>{car.fuelType}</span>
+                    <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                    <span>{car.transmission}</span>
                   </div>
-                  <Button 
-                    size="sm"
-                    className="rounded-full bg-primary hover:bg-primary/90 text-white text-xs lg:text-sm"
-                  >
-                    View
+
+                  {/* Price Section */}
+                  <div className="flex items-end justify-between">
+                    <div>
+                      <p className="text-lg lg:text-xl font-bold text-text-primary">{car.price}</p>
+                      <p className="text-xs text-text-secondary">EMI {car.emi}</p>
+                    </div>
+                    <Button 
+                      size="sm"
+                      className="rounded-full bg-primary hover:bg-primary/90 text-white text-xs lg:text-sm"
+                      onClick={(e) => {
+                        e.preventDefault();
+                      }}
+                    >
+                      View
                   </Button>
                 </div>
               </div>
-            </motion.div>
+              </motion.div>
+            </Link>
           ))}
         </div>
+        )}
       </div>
     </section>
   );
