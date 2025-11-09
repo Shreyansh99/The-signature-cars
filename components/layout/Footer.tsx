@@ -59,26 +59,26 @@ const Footer = () => {
 
   return (
     <footer className="bg-primary text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12"
         >
           {/* Column 1 - About */}
           <motion.div variants={itemVariants}>
-            <div className="flex items-center space-x-2 mb-3">
+            <div className="flex items-center space-x-2 mb-4">
               <div className="bg-white p-2 rounded-lg">
                 <Car className="h-6 w-6 text-primary" />
               </div>
               <span className="text-xl font-bold">The Signature Cars</span>
             </div>
-            <p className="text-sm text-white/80 mb-3 italic">
-              &quot;Where Quality Meets Luxury&quot;
+            <p className="text-sm text-white/80 mb-4 italic">
+              "Where Quality Meets Luxury"
             </p>
-            <p className="text-sm text-white/70 mb-4">
+            <p className="text-sm text-white/70 mb-6">
               Your trusted partner in finding the perfect premium car. We offer
               1000+ verified vehicles with comprehensive inspection and warranty.
             </p>
@@ -102,8 +102,8 @@ const Footer = () => {
 
           {/* Column 2 - Quick Links */}
           <motion.div variants={itemVariants}>
-            <h3 className="text-lg font-bold mb-3">Quick Links</h3>
-            <ul className="space-y-2">
+            <h3 className="text-lg font-bold mb-4">Quick Links</h3>
+            <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.name}>
                   <a
@@ -119,8 +119,8 @@ const Footer = () => {
 
           {/* Column 3 - Services */}
           <motion.div variants={itemVariants}>
-            <h3 className="text-lg font-bold mb-3">Services</h3>
-            <ul className="space-y-2">
+            <h3 className="text-lg font-bold mb-4">Services</h3>
+            <ul className="space-y-3">
               {services.map((service) => (
                 <li key={service.name}>
                   <a
@@ -136,8 +136,8 @@ const Footer = () => {
 
           {/* Column 4 - Contact */}
           <motion.div variants={itemVariants}>
-            <h3 className="text-lg font-bold mb-3">Contact Us</h3>
-            <ul className="space-y-3">
+            <h3 className="text-lg font-bold mb-4">Contact Us</h3>
+            <ul className="space-y-4">
               <li className="flex items-start space-x-3">
                 <MapPin className="h-5 w-5 text-white/70 flex-shrink-0 mt-0.5" />
                 <span className="text-sm text-white/70">
@@ -181,9 +181,9 @@ const Footer = () => {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.5 }}
-          className="pt-6 border-t border-white/20"
+          className="pt-8 border-t border-white/20"
         >
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-3 md:space-y-0">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm text-white/70">
               © {new Date().getFullYear()} The Signature Cars. All rights reserved.
             </p>

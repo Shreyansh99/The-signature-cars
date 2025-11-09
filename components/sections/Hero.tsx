@@ -35,7 +35,7 @@ const Hero = () => {
       transition: {
         duration: 6,
         repeat: Infinity,
-        ease: "linear",
+        ease: "easeInOut",
       },
     },
   };
@@ -43,21 +43,20 @@ const Hero = () => {
   return (
     <section
       id="home"
-      className="relative min-h-[80vh] lg:min-h-[90vh] flex items-center overflow-hidden bg-gradient-to-br from-light to-accent"
+      className="relative min-h-[60vh] lg:min-h-[70vh] flex items-center overflow-hidden bg-gradient-to-br from-light to-accent"
     >
       {/* Animated Background Elements */}
       <motion.div
         className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl"
-        animate={{ y: [0, -10, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        animate={floatingVariants.animate}
       />
       <motion.div
         className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/10 rounded-full blur-3xl"
-        animate={{ y: [0, -10, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+        animate={floatingVariants.animate}
+        transition={{ delay: 2 }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12 relative z-10">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left Column - Content */}
           <motion.div

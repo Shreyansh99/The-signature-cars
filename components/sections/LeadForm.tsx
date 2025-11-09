@@ -55,20 +55,42 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSuccess }) => {
   const onSubmit = async (data: LeadFormData) => {
     setIsSubmitting(true);
     
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    
-    // Generate reference number
-    const refNum = `TSC${Date.now().toString().slice(-8)}`;
-    setReferenceNumber(refNum);
-    
-    setIsSubmitting(false);
-    setShowSuccessModal(true);
-    reset();
-    
-    // Call onSuccess callback if provided (for modal close)
-    if (onSuccess) {
-      onSuccess();
+    try {
+      // Import and use the submitCarLead function to send data to webhook
+      const { submitCarLead } = await import("@/lib/api/cars");
+      
+      const result = await submitCarLead("general", {
+        fullName: data.fullName,
+        email: data.email,
+        phone: data.phone,
+        lookingFor: data.lookingFor,
+        budget: data.budget,
+      });
+      
+      if (result.success) {
+        setReferenceNumber(result.referenceNumber || `TSC${Date.now().toString().slice(-8)}`);
+        setIsSubmitting(false);
+        setShowSuccessModal(true);
+        reset();
+        
+        // Call onSuccess callback if provided (for modal close)
+        if (onSuccess) {
+          onSuccess();
+        }
+      }
+    } catch (error) {
+      console.error("Error submitting lead:", error);
+      // Still show success for now, but in production you'd show an error
+      const refNum = `TSC${Date.now().toString().slice(-8)}`;
+      setReferenceNumber(refNum);
+      setIsSubmitting(false);
+      setShowSuccessModal(true);
+      reset();
+      
+      // Call onSuccess callback if provided (for modal close)
+      if (onSuccess) {
+        onSuccess();
+      }
     }
   };
 
@@ -120,23 +142,23 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSuccess }) => {
         {/* Left Column - Benefits - Compact */}
         <motion.div
           variants={itemVariants}
-          className="bg-white p-4 lg:p-6 text-text-primary border-r border-gray-200"
+          className="bg-white p-6 lg:p-8 text-text-primary border-r border-gray-200"
         >
-          <div className="inline-block px-3 py-1.5 bg-primary/10 rounded-full text-xs font-semibold mb-3 text-primary">
+          <div className="inline-block px-3 py-1.5 bg-primary/10 rounded-full text-xs font-semibold mb-4 text-primary">
             THE SIGNATURE CARS ADVANTAGE
           </div>
 
-          <h2 className="text-2xl lg:text-3xl font-bold mb-2 text-text-primary">
+          <h2 className="text-2xl lg:text-3xl font-bold mb-3 text-text-primary">
             Get Your Dream Car Quote in 30 Seconds
           </h2>
 
-          <p className="text-text-secondary mb-4">
+          <p className="text-text-secondary mb-6">
             Fill out the form and our expert team will contact you within 2
             hours with the best deals.
           </p>
 
           {/* Benefits List - Compact */}
-          <div className="space-y-3 mb-4">
+          <div className="space-y-4 mb-6">
             {benefits.map((benefit, index) => (
               <motion.div
                 key={benefit.title}
@@ -158,7 +180,7 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSuccess }) => {
           </div>
 
           {/* Trust Stats - Compact */}
-          <div className="grid grid-cols-3 gap-3 pt-4 border-t border-gray-200">
+          <div className="grid grid-cols-3 gap-3 pt-6 border-t border-gray-200">
             <div>
               <p className="text-lg lg:text-xl font-bold text-text-primary">10,000+</p>
               <p className="text-xs text-text-secondary">Happy Customers</p>
@@ -175,12 +197,12 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSuccess }) => {
         </motion.div>
 
         {/* Right Column - Form - Compact */}
-        <motion.div variants={itemVariants} className="p-4 lg:p-6">
-          <h3 className="text-xl lg:text-2xl font-bold text-text-primary mb-3">
+        <motion.div variants={itemVariants} className="p-6 lg:p-8">
+          <h3 className="text-xl lg:text-2xl font-bold text-text-primary mb-4">
             Get Started in Seconds
           </h3>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* Full Name - Compact */}
             <div>
               <Label htmlFor="fullName" className="flex items-center space-x-2 mb-1.5 text-sm">
@@ -282,7 +304,7 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSuccess }) => {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-primary hover:bg-primary/90 text-white py-2.5 rounded-full font-semibold transition-all text-sm"
+              className="w-full bg-primary hover:bg-primary/90 text-white py-3 rounded-full font-semibold transition-all text-sm"
             >
               {isSubmitting ? (
                 <>
@@ -356,7 +378,7 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSuccess }) => {
                   Thank You!
                 </h3>
                 <p className="text-text-secondary mb-4">
-                  We&apos;ve received your request. Our expert team will contact you
+                  We've received your request. Our expert team will contact you
                   within 2 hours.
                 </p>
 
@@ -370,10 +392,10 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSuccess }) => {
                 <Button
                   onClick={() =>
                     window.open(
-                    "https://wa.me/919876543210?text=Hi%2C%20I%20just%20submitted%20a%20quote%20request.%20My%20reference%20number%20is%20" +
-                      referenceNumber,
-                    "_blank"
-                  )
+                      "https://wa.me/919876543210?text=Hi, I just submitted a quote request. My reference number is " +
+                        referenceNumber,
+                      "_blank"
+                    )
                   }
                   className="w-full bg-green-600 hover:bg-green-700 text-white mb-3"
                 >

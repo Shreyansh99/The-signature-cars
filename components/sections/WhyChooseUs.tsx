@@ -10,143 +10,154 @@ import {
   Wrench,
   Users,
   CheckCircle2,
+  Phone,
+  Star,
 } from "lucide-react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import LeadFormModal from "@/components/ui/lead-form-modal";
 
 const WhyChooseUs = () => {
+  const [showLeadFormModal, setShowLeadFormModal] = useState(false);
   const features = [
     {
       icon: ShieldCheck,
       title: "200+ Point Inspection",
-      description: "Comprehensive quality checks on every vehicle",
+      description: "Every car passes rigorous quality checks",
       subPoints: [
-        "Mechanical inspection",
-        "Body & paint check",
-        "Interior condition",
-        "Documentation verification",
+        "Engine & transmission tested",
+        "Safety systems verified",
+        "Complete service history",
+        "100% accident-free guarantee",
       ],
     },
     {
       icon: BadgeIndianRupee,
-      title: "Best Price Guarantee",
-      description: "Competitive prices with price match promise",
+      title: "Save Up to ₹2 Lakhs",
+      description: "Best prices guaranteed or we match it",
       subPoints: [
-        "Transparent pricing",
-        "No hidden charges",
-        "Price match guarantee",
-        "Best market value",
-      ],
-    },
-    {
-      icon: Truck,
-      title: "Quick Delivery",
-      description: "Get your car delivered in 24-48 hours",
-      subPoints: [
-        "Doorstep delivery",
-        "Pan-India service",
-        "Safe transportation",
-        "Real-time tracking",
+        "Lowest market prices",
+        "Instant price match",
+        "Zero hidden fees",
+        "Transparent valuation",
       ],
     },
     {
       icon: RotateCcw,
-      title: "7-Day Money Back",
-      description: "No questions asked return policy",
+      title: "7-Day Return Policy",
+      description: "Love it or return it - no questions asked",
       subPoints: [
         "Full refund guarantee",
-        "Easy return process",
-        "No hidden terms",
-        "Customer satisfaction",
+        "Free pickup service",
+        "No restocking fees",
+        "Instant refund processing",
       ],
     },
     {
       icon: Award,
-      title: "Comprehensive Warranty",
-      description: "Extended warranty options available",
+      title: "5-Year Warranty",
+      description: "Comprehensive coverage for peace of mind",
       subPoints: [
-        "Engine warranty",
-        "Transmission coverage",
-        "Roadside assistance",
-        "24/7 support",
-      ],
-    },
-    {
-      icon: Calculator,
-      title: "Flexible Financing",
-      description: "Instant loan approvals with low interest",
-      subPoints: [
-        "Low interest rates",
-        "Flexible tenure",
-        "Quick approval",
-        "Multiple bank options",
-      ],
-    },
-    {
-      icon: Wrench,
-      title: "Complimentary Services",
-      description: "3 free services included with every purchase",
-      subPoints: [
-        "Free servicing",
-        "Insurance transfer",
-        "RC transfer",
-        "Documentation help",
-      ],
-    },
-    {
-      icon: Users,
-      title: "Expert Guidance",
-      description: "10+ years of industry experience",
-      subPoints: [
-        "Certified advisors",
-        "24/7 customer support",
-        "Personalized assistance",
-        "Post-sale support",
+        "Engine & gearbox warranty",
+        "24/7 roadside assistance",
+        "Free maintenance packages",
+        "Nationwide service network",
       ],
     },
   ];
 
-  const stats = [
-    { value: "10,000+", label: "Happy Customers" },
-    { value: "1,000+", label: "Cars Sold" },
-    { value: "4.9/5", label: "Customer Rating" },
-    { value: "50+", label: "Cities Served" },
+  const guarantees = [
+    {
+      icon: Star,
+      title: "4.9/5 Customer Rating",
+      description: "From 10,000+ happy customers",
+    },
+    {
+      icon: Truck,
+      title: "24-Hour Delivery",
+      description: "Get your car delivered to your doorstep",
+    },
+    {
+      icon: Calculator,
+      title: "99% Loan Approval",
+      description: "Instant financing at lowest rates",
+    },
   ];
 
 
 
   return (
-    <section id="why-choose-us" className="py-20 bg-gradient-to-b from-white to-accent/20">
+    <section id="why-choose-us" className="py-12 lg:py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-16 animate-slide-up">
+        {/* Header - More Conversion Focused */}
+        <motion.div
+          className="text-center mb-12 lg:mb-16"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.5 }}
+        >
           <span className="text-sm font-semibold text-primary uppercase tracking-wider">
-            WHY CHOOSE US
+            TRUSTED BY 10,000+ CUSTOMERS
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-text-primary mt-4 mb-4">
-            The Signature Cars Advantage
+          <h2 className="text-3xl lg:text-4xl font-bold text-text-primary mt-4 mb-4">
+            Why Smart Buyers Choose Signature Cars
           </h2>
-          <p className="text-text-secondary max-w-2xl mx-auto">
-            Experience premium service and unmatched quality with every purchase.
-            We&apos;re committed to making your car buying journey smooth and hassle-free.
+          <p className="text-text-secondary max-w-2xl mx-auto text-lg">
+            Get the best deals, guaranteed quality, and complete peace of mind with every purchase
           </p>
-        </div>
+        </motion.div>
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        {/* Top Guarantees - Immediate Trust Building */}
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 lg:mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.5 }}
+        >
+          {guarantees.map((guarantee, index) => (
+            <motion.div
+              key={guarantee.title}
+              className="bg-gray-50 rounded-xl p-6 border border-gray-200"
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.4, delay: index * 0.1 }}
+            >
+              <guarantee.icon className="h-8 w-8 text-primary mb-3" />
+              <h3 className="text-lg font-bold text-text-primary mb-2">
+                {guarantee.title}
+              </h3>
+              <p className="text-sm text-text-secondary">
+                {guarantee.description}
+              </p>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Features Grid - Focused on Benefits */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 mb-12 lg:mb-16">
           {features.map((feature, index) => (
-            <div
+            <motion.div
               key={feature.title}
-              className="bg-white rounded-xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-primary/30 group hover-lift"
+              className="bg-gray-50 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-200 hover:border-primary/30 group"
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.45, delay: index * 0.1 }}
             >
               {/* Icon Container */}
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-lg mb-4 group-hover:shadow-lg transition-all duration-300">
-                <feature.icon className="h-8 w-8 text-white" />
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-lg mb-4">
+                <feature.icon className="h-5 w-5 text-white" />
               </div>
 
               {/* Content */}
-              <h3 className="text-lg font-bold text-text-primary mb-2">
+              <h3 className="text-xl font-bold text-text-primary mb-3">
                 {feature.title}
               </h3>
-              <p className="text-sm text-text-secondary mb-4">
+              <p className="text-text-secondary mb-4 font-medium">
                 {feature.description}
               </p>
 
@@ -155,33 +166,57 @@ const WhyChooseUs = () => {
                 {feature.subPoints.map((point, idx) => (
                   <li
                     key={idx}
-                    className="flex items-start space-x-2 text-xs text-text-secondary"
+                    className="flex items-start space-x-2 text-sm text-text-secondary"
                   >
-                    <CheckCircle2 className="h-3 w-3 text-primary mt-0.5 flex-shrink-0" />
+                    <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
                     <span>{point}</span>
                   </li>
                 ))}
               </ul>
-            </div>
+            </motion.div>
           ))}
         </div>
 
-        {/* Stats Row */}
-        <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 animate-fade-in">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
-              <div key={stat.label} className="text-center">
-                <p className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
-                  {stat.value}
-                </p>
-                <p className="text-sm text-text-secondary font-medium">
-                  {stat.label}
-                </p>
-              </div>
-            ))}
+        {/* Strong CTA Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="bg-white rounded-2xl p-8 lg:p-12 text-center border border-gray-200 shadow-sm"
+        >
+          <h3 className="text-2xl lg:text-3xl font-bold mb-4 text-text-primary">
+            Ready to Experience the Signature Difference?
+          </h3>
+          <p className="text-lg mb-6 text-text-secondary max-w-2xl mx-auto">
+            Join thousands of satisfied customers who got their dream car with complete peace of mind
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button 
+              size="lg" 
+              className="bg-primary hover:bg-primary/90 text-white px-8 py-3 text-lg font-semibold"
+              onClick={() => setShowLeadFormModal(true)}
+            >
+              Get Instant Quote
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="border-primary text-primary hover:bg-primary hover:text-white px-8 py-3 text-lg font-semibold"
+              onClick={() => window.open('tel:+919999999999', '_self')}
+            >
+              <Phone className="mr-2 h-5 w-5" />
+              Call Now: +91 99999 99999
+            </Button>
           </div>
-        </div>
+          <p className="text-sm mt-4 opacity-75">
+            Limited time offer: Get ₹25,000 off on your first purchase
+          </p>
+        </motion.div>
       </div>
+      
+      {/* Lead Form Modal */}
+      <LeadFormModal open={showLeadFormModal} onOpenChange={setShowLeadFormModal} />
     </section>
   );
 };
