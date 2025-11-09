@@ -139,36 +139,28 @@ export async function submitCarLead(
     message?: string;
   }
 ): Promise<{ success: boolean; referenceNumber?: string }> {
-  try {
-    // Temporary webhook integration - will be replaced with proper backend later
-    const webhookUrl = "https://webnexaai.online/webhook/carlead";
-    
-    const response = await fetch(webhookUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...formData,
-        carId,
-        timestamp: new Date().toISOString(),
-        source: "signature-cars-website"
-      }),
-    });
-    
-    if (!response.ok) {
-      console.error("Webhook submission failed:", response.status, response.statusText);
-      // Still return success for now to maintain user experience
-      // In production, you'd want to handle this differently
-    }
-    
-    const referenceNumber = `TSC${Date.now().toString().slice(-8)}`;
-    return { success: true, referenceNumber };
-  } catch (error) {
-    console.error("Error submitting lead to webhook:", error);
-    // Return success anyway to maintain user experience
-    // In production, you'd want to handle this differently
-    const referenceNumber = `TSC${Date.now().toString().slice(-8)}`;
-    return { success: true, referenceNumber };
-  }
+  // TODO: Uncomment when backend is ready
+  // try {
+  //   const response = await fetch(`${API_BASE_URL}/cars/${carId}/lead`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(formData),
+  //   });
+  //   
+  //   if (!response.ok) {
+  //     throw new Error("Failed to submit lead");
+  //   }
+  //   
+  //   return await response.json();
+  // } catch (error) {
+  //   console.error("Error submitting lead:", error);
+  //   throw error;
+  // }
+
+  // Temporary: Simulate API call
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  const referenceNumber = `TSC${Date.now().toString().slice(-8)}`;
+  return { success: true, referenceNumber };
 }

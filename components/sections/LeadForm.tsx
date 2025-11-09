@@ -55,42 +55,20 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSuccess }) => {
   const onSubmit = async (data: LeadFormData) => {
     setIsSubmitting(true);
     
-    try {
-      // Import and use the submitCarLead function to send data to webhook
-      const { submitCarLead } = await import("@/lib/api/cars");
-      
-      const result = await submitCarLead("general", {
-        fullName: data.fullName,
-        email: data.email,
-        phone: data.phone,
-        lookingFor: data.lookingFor,
-        budget: data.budget,
-      });
-      
-      if (result.success) {
-        setReferenceNumber(result.referenceNumber || `TSC${Date.now().toString().slice(-8)}`);
-        setIsSubmitting(false);
-        setShowSuccessModal(true);
-        reset();
-        
-        // Call onSuccess callback if provided (for modal close)
-        if (onSuccess) {
-          onSuccess();
-        }
-      }
-    } catch (error) {
-      console.error("Error submitting lead:", error);
-      // Still show success for now, but in production you'd show an error
-      const refNum = `TSC${Date.now().toString().slice(-8)}`;
-      setReferenceNumber(refNum);
-      setIsSubmitting(false);
-      setShowSuccessModal(true);
-      reset();
-      
-      // Call onSuccess callback if provided (for modal close)
-      if (onSuccess) {
-        onSuccess();
-      }
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    
+    // Generate reference number
+    const refNum = `TSC${Date.now().toString().slice(-8)}`;
+    setReferenceNumber(refNum);
+    
+    setIsSubmitting(false);
+    setShowSuccessModal(true);
+    reset();
+    
+    // Call onSuccess callback if provided (for modal close)
+    if (onSuccess) {
+      onSuccess();
     }
   };
 
@@ -262,20 +240,12 @@ const LeadForm: React.FC<LeadFormProps> = ({ onSuccess }) => {
               <Label htmlFor="lookingFor" className="mb-1.5 block text-sm">
                 What are you looking for? *
               </Label>
-              <select
+              <Input
+                id="lookingFor"
                 {...register("lookingFor")}
-                className={`w-full px-3 py-2 text-sm border rounded-md ${
-                  errors.lookingFor ? "border-red-500" : "border-gray-300"
-                }`}
-              >
-                <option value="">Select an option</option>
-                <option value="Sedan">Sedan</option>
-                <option value="SUV">SUV</option>
-                <option value="Hatchback">Hatchback</option>
-                <option value="Luxury">Luxury</option>
-                <option value="Electric">Electric</option>
-                <option value="Not Sure">Not Sure</option>
-              </select>
+                placeholder="e.g., Sedan, SUV, Luxury car, etc."
+                className={errors.lookingFor ? "border-red-500" : ""}
+              />
               {errors.lookingFor && (
                 <p className="text-red-500 text-xs mt-1">{errors.lookingFor.message}</p>
               )}
