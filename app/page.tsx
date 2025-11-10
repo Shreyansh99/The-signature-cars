@@ -14,7 +14,7 @@ export default function Home() {
       <FeaturedCars />
       {/* <Testimonials /> */}
       {/* <WhyChooseUs /> */}
-
+      {/* LeadForm section removed as requested */}
       <Footer />
     </main>
   );

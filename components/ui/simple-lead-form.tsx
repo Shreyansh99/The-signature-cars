@@ -145,13 +145,21 @@ const SimpleLeadForm: React.FC<SimpleLeadFormProps> = ({ onSuccess, car }) => {
           <Label htmlFor="lookingFor" className="mb-1.5 block text-sm">
             What are you looking for? *
           </Label>
-          <Input
-            id="lookingFor"
+          <select
             {...register("lookingFor")}
-            placeholder="e.g., Sedan, SUV, Luxury car, etc."
-            className={errors.lookingFor ? "border-red-500" : ""}
+            className={`w-full px-3 py-2 text-sm border rounded-md ${
+              errors.lookingFor ? "border-red-500" : "border-gray-300"
+            }`}
             defaultValue={car?.category || ""}
-          />
+          >
+            <option value="">Select an option</option>
+            <option value="Sedan">Sedan</option>
+            <option value="SUV">SUV</option>
+            <option value="Hatchback">Hatchback</option>
+            <option value="Luxury">Luxury</option>
+            <option value="Electric">Electric</option>
+            <option value="Not Sure">Not Sure</option>
+          </select>
           {errors.lookingFor && (
             <p className="text-red-500 text-xs mt-1">{errors.lookingFor.message}</p>
           )}

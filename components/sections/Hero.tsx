@@ -35,7 +35,7 @@ const Hero = () => {
       transition: {
         duration: 6,
         repeat: Infinity,
-        ease: "easeInOut",
+        ease: "easeInOut" as const,
       },
     },
   };
@@ -173,22 +173,25 @@ const Hero = () => {
                 Find Your Perfect Car
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2 lg:gap-3">
-                <Select className="w-full text-sm">
-                  <option>Brand</option>
-                  <option>Mercedes-Benz</option>
-                  <option>BMW</option>
-                  <option>Audi</option>
-                  <option>Hyundai</option>
-                  <option>Honda</option>
-                  <option>Toyota</option>
-                </Select>
-                <Select className="w-full text-sm">
-                  <option>Budget</option>
-                  <option>Under ₹5L</option>
-                  <option>₹5L - ₹10L</option>
-                  <option>₹10L - ₹20L</option>
-                  <option>₹20L+</option>
-                </Select>
+                <div className="flex-1 min-w-0 rounded-full bg-white/80 backdrop-blur-sm border-0 text-text-primary focus-within:ring-2 focus-within:ring-primary/30">
+                  <Select>
+                    <option value="">Select Brand</option>
+                    <option value="toyota">Toyota</option>
+                    <option value="honda">Honda</option>
+                    <option value="hyundai">Hyundai</option>
+                    <option value="tata">Tata</option>
+                    <option value="mahindra">Mahindra</option>
+                  </Select>
+                </div>
+                <div className="flex-1 min-w-0 rounded-full bg-white/80 backdrop-blur-sm border-0 text-text-primary focus-within:ring-2 focus-within:ring-primary/30">
+                  <Select>
+                    <option value="">Select Model</option>
+                    <option value="suv">SUV</option>
+                    <option value="sedan">Sedan</option>
+                    <option value="hatchback">Hatchback</option>
+                    <option value="luxury">Luxury</option>
+                  </Select>
+                </div>
                 <Button className="w-full rounded-full bg-primary hover:bg-primary/90 text-white text-sm lg:text-base">
                   <Search className="mr-2 h-4 w-4" />
                   Search

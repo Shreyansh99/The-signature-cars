@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ProductDetail from "@/components/sections/ProductDetail";
-import { fetchCarById } from "@/lib/api/cars";
+import { carsApi } from "@/lib/api/cars";
 
 interface PageProps {
   params: {
@@ -12,7 +12,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
   // Using the API service layer for consistency
-  const car = await fetchCarById(params.id);
+  const { data: car } = await carsApi.getCarById(params.id);
 
   if (!car) {
     return {
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function CarDetailPage({ params }: PageProps) {
   // Using the API service layer - will automatically switch to backend when ready
-  const car = await fetchCarById(params.id);
+  const { data: car } = await carsApi.getCarById(params.id);
 
   if (!car) {
     notFound();

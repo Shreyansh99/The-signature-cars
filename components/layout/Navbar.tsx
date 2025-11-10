@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Menu,
   X,
   Phone,
-  ChevronDown,
   Car,
+  Plus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -19,7 +20,6 @@ const Navbar = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,10 +45,15 @@ const Navbar = () => {
   }, [lastScrollY]);
 
   const navLinks = [
-    { name: "Home", href: "#home" },
+    { name: "Home", href: "/" },
     { name: "Buy Cars", href: "#cars" },
     { name: "About Us", href: "#about" },
     { name: "Contact", href: "#contact" },
+  ];
+  
+  // Admin navigation links
+  const adminLinks = [
+    { name: "Add Car", href: "/addcar" },
   ];
 
   return (
@@ -67,7 +72,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-20 md:h-20">
           {/* Logo */}
           <motion.a
-            href="#home"
+            href="/"
             className="flex items-center space-x-2 group"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -96,13 +101,15 @@ const Navbar = () => {
 
           {/* Right Side - Desktop */}
           <div className="hidden lg:flex items-center space-x-4">
-            <a
-              href="tel:+919876543210"
-              className="flex items-center space-x-2 text-text-secondary hover:text-primary transition-colors"
+            <Button 
+              asChild
+              variant="outline"
+              className="rounded-full border-primary text-primary hover:bg-primary/10"
             >
-              <Phone className="h-4 w-4" />
-              <span className="text-sm font-medium">+91 98765 43210</span>
-            </a>
+              <Link href="/addcar">
+                Add Car
+              </Link>
+            </Button>
             <Button 
               className="rounded-full bg-primary hover:bg-primary/90 text-white px-6"
               onClick={() => setShowLeadFormModal(true)}
@@ -110,7 +117,7 @@ const Navbar = () => {
               Get Quote
             </Button>
           </div>
-
+          
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -168,11 +175,25 @@ const Navbar = () => {
                       key={link.name}
                       href={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="block px-4 py-3 text-text-secondary hover:bg-accent hover:text-primary rounded-lg transition-colors"
+                      className="block px-4 py-2 text-base font-medium text-text-primary hover:bg-accent hover:text-primary rounded-md"
                     >
                       {link.name}
                     </a>
                   ))}
+                  
+                  {/* Admin Links */}
+                  <div className="border-t border-gray-200 my-2 pt-2">
+                    {adminLinks.map((link) => (
+                      <a
+                        key={link.name}
+                        href={link.href}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="block px-4 py-2 text-base font-medium text-primary hover:bg-accent rounded-md"
+                      >
+                        {link.name}
+                      </a>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="mt-8 space-y-4">
@@ -197,7 +218,7 @@ const Navbar = () => {
       </AnimatePresence>
       
         {/* Lead Form Modal */}
-        <LeadFormModal open={showLeadFormModal} onOpenChange={setShowLeadFormModal} />
+      <LeadFormModal open={showLeadFormModal} onOpenChange={setShowLeadFormModal} />
     </motion.nav>
   );
 };

@@ -1,0 +1,4 @@
+[functions.verify-car-code]
+# Environment variables
+[functions.verify-car-code.env_vars]
+CAR_ADD_VERIFICATION_CODE = "your_secure_code_here"  # This will be overridden by the actual env var in production

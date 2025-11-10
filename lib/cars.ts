@@ -1,133 +1,111 @@
-import { Car } from "@/types";
+import { createClient } from '@/lib/supabase/client'
+import { Car, CarFormData } from "@/lib/supabase/types"
 
-// Sample car data - In production, this would come from a database or API
-export const sampleCars: Car[] = [
-  {
-    id: "1",
-    name: "Mercedes-Benz C-Class",
-    year: 2023,
-    variant: "C 220d",
-    brand: "Mercedes-Benz",
-    category: "Sedan",
-    mileage: "15,420 km",
-    fuelType: "Diesel",
-    transmission: "Automatic",
-    price: "₹14.2 L",
-    emi: "₹28,500/mo",
-    images: [
-      "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
-    ],
-    featured: true,
-    badge: "Featured",
-    inspectionPassed: true,
-  },
-  {
-    id: "2",
-    name: "BMW X5",
-    year: 2022,
-    variant: "xDrive30d",
-    brand: "BMW",
-    category: "SUV",
-    mileage: "22,100 km",
-    fuelType: "Diesel",
-    transmission: "Automatic",
-    price: "₹55.5 L",
-    emi: "₹1,10,000/mo",
-    images: [
-      "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
-    ],
-    badge: "New Arrival",
-    inspectionPassed: true,
-  },
-  {
-    id: "3",
-    name: "Audi A4",
-    year: 2023,
-    variant: "Premium Plus",
-    brand: "Audi",
-    category: "Sedan",
-    mileage: "8,500 km",
-    fuelType: "Petrol",
-    transmission: "Automatic",
-    price: "₹18.9 L",
-    emi: "₹37,500/mo",
-    images: [
-      "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
-    ],
-    inspectionPassed: true,
-  },
-  {
-    id: "4",
-    name: "Hyundai Creta",
-    year: 2023,
-    variant: "SX (O) Turbo",
-    brand: "Hyundai",
-    category: "SUV",
-    mileage: "12,300 km",
-    fuelType: "Petrol",
-    transmission: "Automatic",
-    price: "₹9.8 L",
-    emi: "₹19,500/mo",
-    images: [
-      "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
-    ],
-    badge: "Best Deal",
-    inspectionPassed: true,
-  },
-  {
-    id: "5",
-    name: "Honda City",
-    year: 2023,
-    variant: "VX CVT",
-    brand: "Honda",
-    category: "Sedan",
-    mileage: "10,200 km",
-    fuelType: "Petrol",
-    transmission: "Automatic",
-    price: "₹7.5 L",
-    emi: "₹15,000/mo",
-    images: [
-      "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=1200&h=800&fit=crop",
-    ],
-    inspectionPassed: true,
-  },
-  {
-    id: "6",
-    name: "Toyota Fortuner",
-    year: 2022,
-    variant: "4x4 AT",
-    brand: "Toyota",
-    category: "SUV",
-    mileage: "25,000 km",
-    fuelType: "Diesel",
-    transmission: "Automatic",
-    price: "₹32.5 L",
-    emi: "₹64,500/mo",
-    images: [
-      "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=1200&h=800&fit=crop",
-      "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&h=800&fit=crop",
-    ],
-    inspectionPassed: true,
-  },
-];
+const supabase = createClient()
 
-export function getCarById(id: string): Car | undefined {
-  return sampleCars.find((car) => car.id === id);
+export interface CarFilters {
+  featured?: boolean;
+  brand?: string;
+  category?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  fuelType?: string;
+  [key: string]: any;
 }
 
-export function getAllCars(): Car[] {
-  return sampleCars;
+// Helper functions for car operations
+export async function getCarById(id: string): Promise<Car | null> {
+  const { data: car, error } = await supabase
+    .from('cars')
+    .select('*')
+    .eq('id', id)
+    .single()
+  
+  if (error || !car) return null
+  return car
 }
 
+export async function getAllCars(filters: any = {}): Promise<Car[]> {
+  let query = supabase
+    .from('cars')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  // Apply filters if any
+  if (filters.featured) {
+    query = query.eq('featured', true)
+  }
+  
+  const { data: cars, error } = await query
+  
+  if (error) {
+    console.error('Error fetching cars:', error)
+    return []
+  }
+  
+  return cars || []
+}
+
+export function formatPrice(price: number | string): string {
+  const priceNum = typeof price === 'string' ? parseFloat(price) : price
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 1,
+    minimumFractionDigits: 1,
+  })
+    .format(priceNum / 100000)
+    .replace('₹', '₹')
+    .replace(/\.0$/, '') + ' L'
+}
+
+export function calculateEMI(price: number | string, months: number = 60): string {
+  const priceNum = typeof price === 'string' ? parseFloat(price) : price
+  const emi = (priceNum * 1.1) / months // 10% interest over 5 years (60 months)
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 0,
+  })
+    .format(emi)
+    .replace('₹', '₹') + '/mo'
+}
+
+export async function addCarWithVerification(
+  carData: CarFormData, 
+  verificationCode: string
+): Promise<{ data: Car | null; error: Error | null }> {
+  try {
+    // Verify the code matches the one in environment variables
+    if (verificationCode !== process.env.NEXT_PUBLIC_CAR_ADD_VERIFICATION_CODE) {
+      return { 
+        data: null, 
+        error: new Error('Invalid verification code') 
+      };
+    }
+
+    // Add the car to the database
+    const { data, error } = await supabase
+      .from('cars')
+      .insert([{
+        ...carData,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        is_verified: true,
+        status: 'active'
+      }])
+      .select()
+      .single();
+
+    if (error) throw error;
+    
+    return { data, error: null };
+  } catch (error) {
+    console.error('Error adding car:', error);
+    return { 
+      data: null, 
+      error: error instanceof Error ? error : new Error('Failed to add car') 
+    };
+  }
+}
 
